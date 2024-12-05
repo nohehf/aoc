@@ -18,6 +18,12 @@ pub fn challenge_name(day: Int, part: Int) -> String {
   int.to_string(day) <> "_" <> int.to_string(part)
 }
 
+/// unsafe string to int
+pub fn stoi(s) {
+  let assert Ok(i) = int.parse(s)
+  i
+}
+
 pub fn main() {
   io.println(
     "Sir that's a wendy's! try running one of the days eg.\n gleam run -m day1_1",

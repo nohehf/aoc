@@ -29,13 +29,18 @@ fi
 echo Creating src/day${DAY_NO}_${PART_NO}.gleam
 cat <<EOF > src/day${DAY_NO}_${PART_NO}.gleam
 import aoc
+import gleam/int
 import gleam/io
+import gleam/list
+import gleam/option
+import gleam/regexp
+import gleam/result
 
 const day = ${DAY_NO}
 
 const part = ${PART_NO}
 
-const exemple_input = ""
+const example_input = ""
 
 pub fn main() {
   let input = example_input
@@ -48,9 +53,10 @@ pub fn main() {
     <> input,
   )
   // TODO
+}
 EOF
 
-touch inputs/${DAY_NO}_${PART_NO}.txt
+touch inputs/${DAY_NO}.txt
 
-echo "check https://adventofcode.com/2024/day/${DAY_NO}/input to fill inputs/${DAY_NO}_${PART_NO}.txt"
+echo "check https://adventofcode.com/2024/day/${DAY_NO}/input to fill inputs/${DAY_NO}.txt"
 echo "check https://adventofcode.com/2024/day/${DAY_NO} for the problem"
