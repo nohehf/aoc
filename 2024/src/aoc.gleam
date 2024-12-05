@@ -4,14 +4,20 @@ import gleam/string
 import simplifile
 
 // shared functions
-pub fn read_input(day: Int) -> String {
-  let path = "./inputs/" <> int.to_string(day) <> ".txt"
+
+pub fn read_custom_input(name: String) {
+  let path = "./inputs/" <> name <> ".txt"
   let assert Ok(input) = simplifile.read(path)
   let input = case string.length(input) {
     0 -> panic as "Empty input file !"
     _ -> input
   }
+  io.println("Reading:" <> path)
   input
+}
+
+pub fn read_input(day: Int) -> String {
+  read_custom_input(itos(day))
 }
 
 pub fn challenge_name(day: Int, part: Int) -> String {
@@ -22,6 +28,10 @@ pub fn challenge_name(day: Int, part: Int) -> String {
 pub fn stoi(s) {
   let assert Ok(i) = int.parse(s)
   i
+}
+
+pub fn itos(i) {
+  int.to_string(i)
 }
 
 pub fn main() {

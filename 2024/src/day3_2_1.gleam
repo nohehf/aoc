@@ -16,27 +16,28 @@ const example_input = "xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+
 
 pub fn main() {
   let input = example_input
+  //let input = aoc.read_custom_input("3_2")
 
-  let input = aoc.read_custom_input("3_2")
+  io.println_error(
+    "Running challenge "
+    <> aoc.challenge_name(day, part)
+    <> "\n with input:\n"
+    <> input,
+  )
 
-  let input =
-    input
-    |> string.split("do()")
-    |> io.debug
-    |> list.map(fn(s) {
-      let ls =
-        string.split(s, "don't()")
-        |> io.debug
-      case ls {
-        [one] -> one
-        [first, ..] -> first
-        _ -> ""
-      }
+  let input = "do()" <> input <> "don't()"
+
+  let assert Ok(enabled) = regexp.from_string("do\\(\\).*don't\\(\\)")
+
+  let _ =
+    regexp.scan(enabled, input)
+    |> list.map(fn(m) {
+      let regexp.Match(text, _) = m
+      text
     })
     |> string.join("")
     |> io.debug
-
-  // from 3_1
+  // This hole sanitization is in place because .* would be greedy matching
   let assert Ok(r) = regexp.from_string("mul\\((\\d{1,3}),(\\d{1,3})\\)")
 
   regexp.scan(r, input)
