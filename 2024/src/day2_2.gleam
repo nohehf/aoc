@@ -90,6 +90,7 @@ pub fn main() {
   |> list.map(fn(i) { [i, ..list.combinations(i, list.length(i) - 1)] })
   // count the number of inputs, where at least 1 combination is valid
   // TODO: this is ugly in term of style, and probably the functions cascade (definin twice fn(combinations) can be avoided with panache, maybe with the `use` keyword
+  // NOTE: This is also bad in term of performance and it could be optimized, but it is the easiest solution.
   |> list.count(fn(combinations) {
     list.any(combinations, fn(combinations) { is_valid_rec(combinations, None) })
   })
