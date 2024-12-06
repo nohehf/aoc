@@ -102,10 +102,6 @@ fn count_horizontal(m: M) {
   |> int.sum
 }
 
-fn count_vertical(m: M) {
-  m |> list.transpose |> count_horizontal
-}
-
 // wrap 1: [a, b, c] -> [b, c, a]
 // no-wrap 1: [a, b, c] -> [b, c, x]
 fn list_shift_replace(l, n, x) {
@@ -117,6 +113,7 @@ fn list_shift_replace(l, n, x) {
 }
 
 // Okaaaaay so it turns out we DO want to match wrapping values, making this SO much easier. My initial regex solution could have easily worked TT. IMO the example was not good not precising this.
+// OR NOT ??
 fn list_shift_wrap(l, n) {
   case l, n {
     [], _ -> []
@@ -136,11 +133,12 @@ fn count_right_diag(m: M) {
   //SOOO
   let verticalized =
     list.index_fold(m, [], fn(new_mat, l, i) {
-      [list_shift_wrap(l, i % list.length(pattern)), ..new_mat]
+      [list_shift_replace(l, i % list.length(pattern), O), ..new_mat]
     })
     |> list.reverse
 
-  verticalized |> count_vertical
+  // XMAS
+  verticalized |> list.transpose |> count_horizontal
 }
 
 fn mat_flip_h(m) {
@@ -151,28 +149,22 @@ fn mat_flip_v(m) {
   m |> list.reverse
 }
 
-fn mat_rev(m) {
-  m
-  |> mat_flip_h
-  |> mat_flip_v
+fn count_quarter(m) {
+  count_horizontal(m) + count_right_diag(m)
 }
 
-fn count_left_diag(m: M) {
+// rot 90 deg clockwise: transpose then reverse rows
+fn mat_rot(m) {
   m
-  |> mat_flip_h
-  |> count_right_diag
-}
-
-fn count_fwd(m) {
-  count_horizontal(m)
-  + count_vertical(m)
-  + count_left_diag(m)
-  + count_right_diag(m)
+  |> list.transpose
+  |> list.map(list.reverse)
 }
 
 fn count(m) {
-  // count forward + backwards (for SAMX).
-  count_fwd(m) + count_fwd(mat_rev(m))
+  // count for each rotation
+  [m, mat_rot(m), mat_rot(mat_rot(m)), mat_rot(mat_rot(mat_rot(m)))]
+  |> list.map(count_quarter)
+  |> int.sum
 }
 
 fn debug_mat(m) {
@@ -182,12 +174,17 @@ fn debug_mat(m) {
 const day = 4
 
 pub fn main() {
-  // let input = example_input
-  let input = aoc.read_input(day)
-  // Ok
-  [M, M, M, S, X, X, M, A, S, M]
-  |> list_starts_with([M, M, M, S, A])
-  |> io.debug
+  let input = example_input
+
+  //let input = aoc.read_input(day)
+
+  let assert False =
+    [M, M, M, S, X, X, M, A, S, M]
+    |> list_starts_with([M, M, M, S, A])
+
+  let assert False =
+    [M, M, M, S, X, X, M, A, S, M]
+    |> list_starts_with([M, M, M, S, X])
 
   // Ok
   [M, M, X, M, A, S, M, S, X, X, M, A, S, M]
